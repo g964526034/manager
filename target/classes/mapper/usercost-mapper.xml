@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neuedu.manager.mapper.UserCostMapper">
+	<resultMap id="baseMap" type="com.neuedu.manager.po.UserCost">
+		<id property="id" column="id" />
+		<result property="user.userId" column="user_id" />
+		<result property="user.name" column="name" />
+  		<result property="cost.costName" column="cost_name" />
+  		<result property="costNum" column="cost_num" />
+  		<result property="totalCost" column="total_cost" />
+  		<result property="createTime" column="create_time" />
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.neuedu.manager.po.UserCost">
+  		insert into tb_usercost(user_id,cost_id,cost_num,total_cost) values
+  		(#{user.userId},#{cost.id},#{costNum},#{totalCost})
+  	</insert>
+	
+	<select id="userCostListCount" resultType="int">
+  		select count(*) from tb_usercost,tb_cost,tb_user
+  		<bind name="keywords" value="'%' + keyword + '%'" />
+  		<where>
+  			tb_cost.id = tb_usercost.cost_id and tb_user.user_id = tb_usercost.user_id
+  			<if test="keyword != ''">
+  				and tb_cost.cost_name like #{keywords} 
+  			</if>
+  			<if test="keyword != ''">
+  				and tb_user.name like #{keywords} 
+  			</if>
+  		</where>
+    </select>
+  
+    <select id="userCostList" resultMap="baseMap">
+  		select uc.id,u.user_id,u.name,c.cost_name,c.price,uc.cost_num,uc.total_cost,uc.create_time from tb_usercost uc,tb_user u,tb_cost c
+  		<bind name="keywords" value="'%' + keyword + '%'" />
+  		<where>
+  			uc.user_id = u.user_id and c.id = uc.cost_id
+  			<if test="keyword != ''">
+  				and c.cost_name like #{keywords}
+  			</if>
+  			<if test="keyword != ''">
+  				and u.name like #{keywords} 
+  			</if>
+  		</where>
+  		limit #{begin},#{pageSize}
+    </select>
+  
+    <delete id="delete">
+  		delete from tb_usercost where id = #{id}
+    </delete>
+	
+	<select id="uUserCostListCount" resultType="int">
+  		select count(*) from tb_usercost,tb_cost,tb_user
+  		<bind name="keywords" value="'%' + keyword + '%'" />
+  		<where>
+  			tb_cost.id = tb_usercost.cost_id and tb_user.user_id = tb_usercost.user_id
+  			and tb_usercost.user_id = #{userId}
+  			<if test="keyword != ''">
+  				and tb_cost.cost_name like #{keywords} 
+  			</if>
+  			<if test="keyword != ''">
+  				and tb_user.name like #{keywords} 
+  			</if>
+  		</where>
+    </select>
+  
+    <select id="uUserCostList" resultMap="baseMap">
+  		select uc.id,u.user_id,u.name,c.cost_name,c.price,uc.cost_num,uc.total_cost,uc.create_time from tb_usercost uc,tb_user u,tb_cost c
+  		<bind name="keywords" value="'%' + keyword + '%'" />
+  		<where>
+  			uc.user_id = u.user_id and c.id = uc.cost_id and uc.user_id = #{userId}
+  			<if test="keyword != ''">
+  				and c.cost_name like #{keywords}
+  			</if>
+  			<if test="keyword != ''">
+  				and u.name like #{keywords} 
+  			</if>
+  		</where>
+  		limit #{begin},#{pageSize}
+    </select>
+    
+    <select id="getUserCost" resultMap="baseMap">
+    	select uc.id,uc.user_id,uc.cost_id,uc.cost_num,uc.total_cost,uc.create_time 
+    	from tb_usercost uc
+    	where uc.user_id=#{userId} and uc.cost_id=#{costId} order by uc.user_id
+    </select>
+</mapper>

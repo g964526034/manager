@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neuedu.manager.mapper.UserMapper">
+  <resultMap id="baseMap" type="com.neuedu.manager.po.User">
+  		<id property="userId" column="user_id" />
+  		<result property="name" column="name" />
+  		<result property="id" column="id" />
+  		<result property="gender" column="gender" />
+  		<result property="nation" column="nation" />
+  		<result property="email" column="email" />
+  		<result property="tel" column="tel" />
+  		<result property="houseMessage" column="house_message" />
+  		<result property="houseSituation" column="house_situation" />
+  		<result property="parkMessage" column="park_message" />
+  		<result property="more" column="more" />
+  		<result property="buyTime" column="buy_time" /> 
+  </resultMap>
+  
+  <insert id="insert" parameterType="com.neuedu.manager.po.User">
+  		insert into tb_user(`name`,id,gender,nation,tel,email,house_message,house_situation,park_message,more) values
+  		(#{name},#{id},#{gender},#{nation},#{tel},#{email},#{houseMessage},#{houseSituation},#{parkMessage},#{more})
+  </insert>
+  
+  <select id="getUserById" resultMap="baseMap">
+  		select user_id,`name`,id,gender,nation,tel,email,house_message,house_situation,park_message,more,buy_time from tb_user
+  		where id=#{id}
+  </select>
+  
+  <select id="getUserByTel" resultMap="baseMap">
+  		select user_id,`name`,id,gender,nation,tel,email,house_message,house_situation,park_message,more,buy_time,pwd from tb_user
+  		where tel=#{tel}
+  </select>
+  
+  <select id="getUserByEmail" resultMap="baseMap">
+  		select user_id,`name`,id,gender,nation,tel,email,house_message,house_situation,park_message,more,buy_time,pwd from tb_user
+  		where email=#{email}
+  </select>
+  
+  <select id="userListCount" resultType="int">
+  		select count(*) from tb_user
+  		<bind name="keywords" value="'%' + keyword + '%'" />
+  		<where>
+  			<if test="keyword != ''">
+  				name like #{keywords} or
+  				id like #{keywords} or
+  				tel like #{keywords} or
+  				email like #{keywords} 
+  			</if>
+  		</where>
+  </select>
+  
+  <select id="userList" resultMap="baseMap">
+  		select user_id,`name`,id,tel,email,house_message,house_situation,buy_time from tb_user
+  		<bind name="keywords" value="'%' + keyword + '%'" />
+  		<where>
+  			<if test="keyword != ''">
+  				name like #{keywords} or
+  				id like #{keywords} or
+  				tel like #{keywords} or
+  				email like #{keywords} 
+  			</if>
+  		</where>
+  		limit #{begin},#{pageSize}
+  </select>
+  
+  <delete id="delete">
+  	delete from tb_user where user_id = #{userId}
+  </delete>
+  
+  <select id="getUserByUserId" resultMap="baseMap">
+  		select user_id,`name`,id,gender,nation,tel,email,house_message,house_situation,park_message,more,buy_time from tb_user
+  		where user_id=#{userId}
+  </select>
+  
+  <update id="updateByUserId" parameterType="com.neuedu.manager.po.User">
+		update tb_user 
+		<set>
+			<if test="houseMessage != null">
+				house_message = #{houseMessage},
+			</if>
+			<if test="houseSituation != ''">
+				house_situation = #{houseSituation},
+			</if>
+			<if test="parkMessage != null">
+				park_message = #{parkMessage},
+			</if>
+			<if test="more != null">
+				more = #{more},
+			</if>
+		</set>
+		where user_id=#{userId}
+	</update>
+	
+	<update id="updatePwd" parameterType="com.neuedu.manager.po.User">
+		update tb_user
+		<set>
+			<if test="pwd != ''">
+				pwd = #{pwd},
+			</if>
+		</set>
+		where tel=#{tel} and email=#{email}
+	</update>
+	
+	<select id="getPwd" resultMap="baseMap">
+		select user_id,`name`,id,gender,nation,tel,email,house_message,house_situation,park_message,more,buy_time,pwd from tb_user
+		where tel = #{tel} and email = #{email}
+	</select>
+	
+	<update id="changePwd" parameterType="com.neuedu.manager.po.User">
+		update tb_user
+		
+		set	pwd = #{newpwd}
+			
+		where tel=#{tel} and email=#{email} and pwd = #{pwd}
+	</update>
+</mapper>

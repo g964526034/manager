@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neuedu.manager.mapper.AdminMapper">
+  <resultMap id="baseMap" type="com.neuedu.manager.po.Admin">
+  		<id property="id" column="id" />
+  		<result property="tel" column="tel" />
+  		<result property="email" column="email" />
+  		<result property="realName" column="real_name" />
+  		<result property="gender" column="gender" />
+  		<result property="pwd" column="pwd" />
+  		<result property="marriage" column="marriage" />
+  		<result property="work" column="work" />
+  		<result property="salary" column="salary" />
+  		<result property="privilege" column="privilege" />
+  		<result property="createTime" column="create_time" /> 
+  </resultMap>
+
+  <insert id="insert" parameterType="com.neuedu.manager.po.Admin">
+  		insert into tb_admin(tel,email,real_name,gender,pwd,marriage,work,salary,privilege) values
+  		(#{tel},#{email},#{realName},#{gender},#{pwd},#{marriage},#{work},#{salary},#{privilege})
+  </insert>
+  
+  <select id="getAdminByTel" resultMap="baseMap">
+  		select id,tel,email,real_name,gender,pwd,marriage,work,salary,privilege,create_time from tb_admin
+  		where tel=#{tel}
+  </select>
+  
+  <select id="getAdminByEmail" resultMap="baseMap">
+  		select id,tel,email,real_name,gender,pwd,marriage,work,salary,privilege,create_time from tb_admin
+  		where email=#{email}
+  </select>
+  
+  <select id="adminListCount" resultType="int">
+  		select count(*) from tb_admin
+  		<bind name="keywords" value="'%' + keyword + '%'" />
+  		<where>
+  			<if test="keyword != ''">
+  				real_name like #{keywords} or
+  				work like #{keywords} or
+  				tel like #{keywords} or
+  				email like #{keywords} or
+  				marriage like #{keywords}
+  			</if>
+  		</where>
+  </select>
+  
+  <select id="adminList" resultMap="baseMap">
+  		select id,tel,email,real_name,gender,pwd,marriage,work,salary,privilege,create_time from tb_admin
+  		<bind name="keywords" value="'%' + keyword + '%'" />
+  		<where>
+  			<if test="keyword != ''">
+  				real_name like #{keywords} or
+  				work like #{keywords} or
+  				tel like #{keywords} or
+  				email like #{keywords} or
+  				marriage like #{keywords}
+  			</if>
+  		</where>
+  		limit #{begin},#{pageSize}
+  </select>
+  
+  <delete id="delete">
+  	delete from tb_admin where id = #{id}
+  </delete>
+  
+  <select id="getAdminById" resultMap="baseMap">
+  		select id,tel,email,real_name,gender,pwd,marriage,work,salary,privilege,create_time from tb_admin
+  		where id=#{id}
+  </select>
+  
+  <update id="updateById" parameterType="com.neuedu.manager.po.Admin">
+		update tb_admin 
+		<set>
+			<if test="marriage != ''">
+				marriage = #{marriage},
+			</if>
+			<if test="work != null">
+				work = #{work},
+			</if>
+			<if test="salary != 0">
+				salary = #{salary},
+			</if>
+			<if test="privilege != ''">
+				privilege = #{privilege},
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+</mapper>

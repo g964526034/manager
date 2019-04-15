@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neuedu.manager.mapper.ComplainMapper">
+	<resultMap id="baseMap" type="com.neuedu.manager.po.Complain">
+		<id property="id" column="id" />
+		<result property="user.userId" column="user_id" />
+  		<result property="user.name" column="name" />
+  		<result property="user.tel" column="tel" />
+  		<result property="title" column="title" />
+  		<result property="compMessage" column="comp_message" />
+  		<result property="admin.realName" column="real_name" />
+  		<result property="response" column="response" />
+  		<result property="solution" column="solution" />
+  		<result property="condition" column="condition" />
+  		<result property="createTime" column="create_time" />
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.neuedu.manager.po.Complain">
+  		insert into tb_complain(user_id,title,comp_message) values
+  		(#{user.userId},#{title},#{compMessage})
+  	</insert>
+	
+	<select id="complainListCount" resultType="int">
+  		select count(*) from tb_complain
+  		<bind name="keywords" value="'%' + keyword + '%'" />
+  		<where>
+  			<if test="keyword != ''">
+  				title like #{keywords} 
+  			</if>
+  		</where>
+    </select>
+  
+    <select id="complainList" resultMap="baseMap">
+  		SELECT tmp.id,tmp.`name`,tmp.tel,tmp.title,tmp.solution,a.real_name,tmp.create_time,tmp.`condition` FROM (
+		select c.id,u.`name`,u.tel,c.title,c.solution,c.admin_id,c.create_time,c.`condition` FROM tb_complain c JOIN tb_user u ON c.user_id = u.user_id
+		) tmp LEFT JOIN tb_admin a ON tmp.admin_id = a.id 
+  		<bind name="keywords" value="'%' + keyword + '%'" />
+  		<where>
+  			tmp.`condition` = 0
+  			<if test="keyword != ''">
+  				and title like #{keywords}
+  			</if>
+  		</where>
+  		limit #{begin},#{pageSize}
+    </select>
+  
+    <delete id="delete">
+  		delete from tb_complain where id = #{id}
+    </delete>
+	
+	<select id="userComplainListCount" resultType="int">
+  		select count(*) from tb_complain
+  		<bind name="keywords" value="'%' + keyword + '%'" />
+  		<where>
+  			user_id = #{userId}
+  		</where>
+    </select>
+	
+	<select id="userComplainList" resultMap="baseMap">
+  		SELECT tmp.id,tmp.user_id,tmp.`name`,tmp.tel,tmp.title,tmp.solution,a.real_name,tmp.create_time,tmp.`condition` FROM (
+		select c.id,u.user_id,u.`name`,u.tel,c.title,c.solution,c.admin_id,c.create_time,c.`condition`  FROM tb_complain c JOIN tb_user u ON c.user_id = u.user_id
+		) tmp LEFT JOIN tb_admin a ON tmp.admin_id = a.id where tmp.user_id = #{userId} 
+  		<bind name="keywords" value="'%' + keyword + '%'" />
+  			
+		<if test="keyword != ''">
+			and title like #{keywords}
+		</if>
+  		limit #{begin},#{pageSize}
+    </select>
+	
+	<select id="getComplainById" resultMap="baseMap">
+		select tmp.id,tmp.user_id,tmp.`name`,tmp.tel,tmp.title,tmp.comp_message,tmp.response,tmp.solution,a.real_name,tmp.create_time FROM (
+		select c.id,u.user_id,u.`name`,u.tel,c.title,c.comp_message,c.solution,c.admin_id,c.response,c.create_time  FROM tb_complain c JOIN tb_user u ON c.user_id = u.user_id
+		) tmp LEFT JOIN tb_admin a ON tmp.admin_id = a.id where tmp.id = #{id} 
+	</select>
+	
+	<update id="updateById" parameterType="com.neuedu.manager.po.Complain">
+		update tb_complain
+		<set>
+			<if test="solution != null">
+				solution = #{solution},
+			</if>
+			<if test="compMessage != ''">
+				comp_message = #{compMessage},
+			</if>
+		</set>
+		where id=#{id}
+  	</update>
+  	
+  	<update id="responseById" parameterType="com.neuedu.manager.po.Complain">
+		update tb_complain
+		<set>
+			<if test="admin != null">
+				admin_id = #{admin.id},
+			</if>
+			<if test="response != ''">
+				response = #{response},
+			</if>
+		</set>
+		where id=#{id}
+  	</update>
+  	
+  	<update id="adminDel" parameterType="com.neuedu.manager.po.Complain">
+  		update tb_complain
+		
+		set `condition` = 1	
+			
+		where id=#{id} and solution = 1
+  	</update>
+	<!-- <select id="getPriceById" resultType="double">
+  		select price from tb_cost
+  		where id=#{id}
+    </select> -->
+	
+</mapper>

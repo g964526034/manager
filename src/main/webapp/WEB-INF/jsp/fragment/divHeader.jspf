@@ -1,0 +1,12 @@
+<%@ page contentType="text/html; charset=UTF-8" %>
+<div class="header">
+	<div class="container">
+		<div class="agile_header_social">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+				<span class="hidden-xs">欢迎你，${sessionScope.user.name }</span>
+				<img src="../../dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+			</a>
+		</div>
+		<div class="clearfix"> </div>
+	</div>
+</div>

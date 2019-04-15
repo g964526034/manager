@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neuedu.manager.mapper.CostMapper">
+	<resultMap id="baseMap" type="com.neuedu.manager.po.Cost">
+		<id property="id" column="id" />
+  		<result property="costName" column="cost_name" />
+  		<result property="price" column="price" />
+  		<result property="createTime" column="create_time" />
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.neuedu.manager.po.Cost">
+  		insert into tb_cost(cost_name,price) values
+  		(#{costName},#{price})
+  	</insert>
+	
+	<select id="costListCount" resultType="int">
+  		select count(*) from tb_cost
+  		<bind name="keywords" value="'%' + keyword + '%'" />
+  		<where>
+  			<if test="keyword != ''">
+  				cost_name like #{keywords} 
+  			</if>
+  		</where>
+    </select>
+  
+    <select id="costList" resultMap="baseMap">
+  		select id,cost_name,price,create_time from tb_cost
+  		<bind name="keywords" value="'%' + keyword + '%'" />
+  		<where>
+  			<if test="keyword != ''">
+  				cost_name like #{keywords}
+  			</if>
+  		</where>
+  		limit #{begin},#{pageSize}
+    </select>
+  
+    <delete id="delete">
+  		delete from tb_cost where id = #{id}
+    </delete>
+	
+	<select id="getPriceById" resultType="double">
+  		select price from tb_cost
+  		where id=#{id}
+  </select>
+
+</mapper>

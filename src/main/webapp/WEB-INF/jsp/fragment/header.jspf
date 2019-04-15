@@ -1,0 +1,119 @@
+<%@page pageEncoding="UTF-8" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core"  prefix="c" %>
+<header class="main-header">
+    <!-- Logo -->
+    <a href="#" class="logo">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini">依晨</span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg">依晨小区物业管理系统</span>
+    </a>
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top">
+      <!-- Sidebar toggle button-->
+      <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      
+    </nav>
+  </header>
+
+  <!-- =============================================== -->
+
+  <!-- Left side column. contains the sidebar -->
+  <aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+      <!-- Sidebar user panel -->
+      <div class="user-panel">
+        <div class="pull-left image">
+          <img src="/manager/admin/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+        </div>
+        <div class="pull-left info">
+        	<a href="/manager/admin/doFind.do?id=${sessionScope.admin.id}">${sessionScope.admin.realName }</a>
+        </div>
+      </div>
+      
+      <!-- sidebar menu: : style can be found in sidebar.less -->
+      <ul class="sidebar-menu" data-widget="tree">
+        <li class="header">主菜单</li>
+            <c:if test="${sessionScope.admin.privilege == 1}">
+	        	<li class="treeview">
+		          <a href="#">
+		            <span>管理员信息</span>
+		            <span class="pull-right-container">
+		              <i class="fa fa-angle-left pull-right"></i>
+		            </span>
+		          </a>
+		          <ul class="treeview-menu">
+		            <li><a href="/manager/user/doBrowse.do"><i class="fa fa-circle-o"></i> 管理员信息浏览</a></li>
+		            <li><a href="/manager/user/add.do"><i class="fa fa-circle-o"></i> 管理员业主信息</a></li>
+		          </ul>
+		        </li>
+	        </c:if>
+        <li class="treeview">
+          <a href="#">
+            <span>业主信息</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="/manager/user/doBrowse.do"><i class="fa fa-circle-o"></i> 业主信息浏览</a></li>
+            <li><a href="/manager/user/add.do"><i class="fa fa-circle-o"></i> 添加业主信息</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#">
+            <span>投诉信息</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="/manager/complain/doBrowse.do"><i class="fa fa-circle-o"></i> 浏览投诉信息</a></li>            
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#">
+			<span>保修信息</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="/manager/fix/doBrowse.do"><i class="fa fa-circle-o"></i> 浏览报修信息</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#">
+			<span>收费信息</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+			<li><a href="/manager/cost/doBrowse.do"><i class="fa fa-circle-o"></i> 浏览费用信息</a></li>
+            <li><a href="/manager/cost/add.do"><i class="fa fa-circle-o"></i> 添加费用信息</a></li>
+            <li><a href="/manager/user_cost/doBrowse.do"><i class="fa fa-circle-o"></i> 查看住户缴费信息</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#">
+			<span>小区公告</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+		    <li><a href="/manager/announce/doBrowse.do"><i class="fa fa-circle-o"></i> 浏览小区公告</a></li>
+            <li><a href="/manager/announce/add.do"><i class="fa fa-circle-o"></i> 添加小区公告</a></li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+    <!-- /.sidebar -->
+  </aside>
